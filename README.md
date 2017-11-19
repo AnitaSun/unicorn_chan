@@ -11,14 +11,14 @@ http://blhx.wikia.com/wiki/Unicorn
 
 ## How to Use?
 
-1. ***installation***
+### installation
   1. install latest Node.js
   2. clone her
   3. create database 'unicorn_chan'
   4. `npm init`, `cp vars.js.sample vars.js` and `vim vars.js (edit as you suite)`
   5. `node index.js` to wake her up
 
-2. ***bot commands***
+### bot commands
   1. `!watch @xxxxxx` - Tell her who's illustrator you wan to collects. 
   2. `!unwatch @xxxxxx` - You might know.
   3. `!list` - She'll give you illustrator list she's watching. 

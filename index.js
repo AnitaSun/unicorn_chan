@@ -84,6 +84,7 @@ unicorn.on('ready', async () => {
 	unicorn.illustrators = await getIllustrators();
 	unicorn.herRoom      = unicorn.channels.get(vars.discord.channelId);
 	
+	fav();
 	setInterval(
 		() => { fav(); },
 		1000 * 60
