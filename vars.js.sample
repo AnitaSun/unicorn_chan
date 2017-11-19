@@ -1,0 +1,29 @@
+
+exports.twitter = {
+	consumer_key        : 'FOOO',
+	consumer_secret     : 'BAAR,
+	access_token_key    : 'FOO',
+	access_token_secret : 'BAR'
+}
+
+
+exports.database = {
+    client     : 'mysql',
+	connection : {
+		socketPath : '/var/run/mysqld/mysqld.sock',
+		user       : 'root',
+		password   : 'PASUWADO',
+		database   : 'unicorn_chan'
+	}
+}
+
+
+
+// check here to get channel ID and token
+// https://github.com/Chikachi/DiscordIntegration/wiki/How-to-get-a-token-and-channel-ID-for-Discord
+
+exports.discord = {
+	channelId : 'CHANNEL ID',
+	token     : 'TOKEN'
+}
+

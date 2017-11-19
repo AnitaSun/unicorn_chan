@@ -1,0 +1,17 @@
+{
+  "name": "unicorn_chan",
+  "version": "1.0.0",
+  "description": "Hearted image scavenger from Twitter",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bitplane",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^11.2.1",
+    "knex": "^0.14.0",
+    "mysql": "^2.15.0",
+    "twitter": "^1.7.1"
+  }
+}
