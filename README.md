@@ -19,7 +19,7 @@ http://blhx.wikia.com/wiki/Unicorn
   5. `node index.js` to wake her up
 
 ### bot commands
-  1. `!watch @xxxxxx` - Tell her who's illustrator you wan to collects. 
+  1. `!watch @xxxxxx` - Tell her an illustrator you want to collect. 
   2. `!unwatch @xxxxxx` - You might know.
   3. `!list` - She'll give you illustrator list she's watching. 
   4. `!kawaii` - Kawaii.
