@@ -3,7 +3,7 @@ const vars    = require('./vars');
 const Discord = require('discord.js');
 let   unicorn = new Discord.Client();
 const Twitter = require('twitter');
-const twitter = new Twitter(vars.twitter);
+const twitter = new Twitter(vars.twitter.keys);
 const knex    = require('knex')(vars.database);
 
 
@@ -87,11 +87,11 @@ unicorn.on('ready', async () => {
 	fav();
 	setInterval(
 		() => { fav(); },
-		1000 * 60
+		vars.twitter.interval
 	);
 	
 	function fav() {
-		twitter.get('favorites/list', (error, tweets, response) => {
+		twitter.get('favorites/list', {count: `${vars.twitter.count}`}, (error, tweets, response) => {
 			tweets.forEach(tweet => {
 				if(-1 === unicorn.tweetedIds.indexOf(tweet.id)) {
 					if(
