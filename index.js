@@ -19,16 +19,16 @@ async function getIllustrators() {
 		return illustrators;
 
 	} catch(e) {
-		if(createTable())
+		if(createIllustratorTable())
 			return [];
 
-		console.log('table creation failed');
+		console.log('illustrator table creation failed');
 		process.exit(1);
 	}
 }
 
 
-async function save(name) {
+async function saveIllustrator(name) {
 	try {
 		let exist = await knex('illustrators').where('name', '=', name);
 
@@ -38,13 +38,13 @@ async function save(name) {
 		}
 
 	} catch(e) {
-		console.log('saving failed');
+		console.log('illustrator saving failed');
 		process.exit(1);
 	}
 }
 
 
-async function remove(name) {
+async function removeIllustrator(name) {
 	try {
 		let exist = await knex('illustrators').where('name', '=', name);
 
@@ -55,13 +55,13 @@ async function remove(name) {
 		}
 
 	} catch(e) {
-		console.log('deletion failed');
+		console.log('illustrator deletion failed');
 		process.exit(1);
 	}
 }
 
 
-async function createTable() {
+async function createIllustratorTable() {
 	try {
 		await knex.schema.createTable('illustrators', function(table) {
 			table.increments();
@@ -77,29 +77,82 @@ async function createTable() {
 }
 
 
+async function getTweetedIds() {
+	try {
+		let table = await knex('tweeted_ids');
+		let tweetedIds = [];
+		Object.keys(table).forEach(line => {
+			tweetedIds.push(table[line].tweeted_id);
+		});
+
+		return tweetedIds;
+
+	} catch(e) {
+		if(createTweetedIdsTable())
+			return [];
+
+		console.log('tweetid table creation failed');
+		process.exit(1);
+	}
+}
+
+
+async function saveTweetedId(tweeted_id) {
+	try {
+		let exist = await knex('tweeted_ids').where('tweeted_id', '=', tweeted_id);
+
+		if(exist.length == 0) {
+			unicorn.tweetedIds.push(tweeted_id.toString());
+			await knex('tweeted_ids').insert({tweeted_id: tweeted_id});
+		}
+
+	} catch(e) {
+		console.log('tweetid saving failed');
+		process.exit(1);
+	}
+}
+
+
+async function createTweetedIdsTable() {
+	try {
+		await knex.schema.createTable('tweeted_ids', function(table) {
+			table.increments();
+			table.string('tweeted_id', 128);
+			table.timestamps();
+		});
+
+		return true;
+
+	} catch (e) {
+		return false;
+	}
+}
+
+
+
 
 // ----------------------------------------------
 unicorn.on('ready', async () => {
-	unicorn.tweetedIds   = [];
+	unicorn.tweetedIds   = await getTweetedIds();
 	unicorn.illustrators = await getIllustrators();
 	unicorn.herRoom      = unicorn.channels.get(vars.discord.channelId);
 	
-	fav();
 	setInterval(
 		() => { fav(); },
 		vars.twitter.interval
 	);
 	
-	function fav() {
+	async function fav() {
 		twitter.get('favorites/list', {count: `${vars.twitter.count}`}, (error, tweets, response) => {
-			tweets.forEach(tweet => {
-				if(-1 === unicorn.tweetedIds.indexOf(tweet.id)) {
+			tweets.forEach(async (tweet) => {
+
+				if(-1 === unicorn.tweetedIds.indexOf(tweet.id.toString())) {
 					if(
 						-1 < unicorn.illustrators.indexOf(tweet.user.screen_name.toLowerCase())  &&
 						-1 < tweet.text.indexOf('https://t.co/')
 					) {
 						unicorn.herRoom.send(`https://twitter.com/${tweet.user.screen_name}/status/` + tweet.id_str);
-						unicorn.tweetedIds.push(tweet.id);
+						await saveTweetedId(tweet.id);
 					}
 				}
 			});
@@ -111,24 +164,34 @@ unicorn.on('ready', async () => {
 
 // ----------------------------------------------
 unicorn.on('message', message => {
-	const kawaii  = /^[!]kawaii\s*/;
-	const watch   = /^[!]watch @([0-9a-zA-Z_]+)\s*/;
-	const unwatch = /^[!]unwatch @([0-9a-zA-Z_]+)\s*/;
-	const list    = /^[!]list\s*/;
+	const kawaii   = /^[!]kawaii$/;
+	const kawaiine = /^[!]kawaiine$/;
+	const nya      = /^[!]nya$/;
+	const watch    = /^[!]watch @([0-9a-zA-Z_]+)\s*/;
+	const unwatch  = /^[!]unwatch @([0-9a-zA-Z_]+)\s*/;
+	const list     = /^[!]list\s*/;
 
 	if(kawaii.test(message)) {
 		message.reply('Thank you, Oni-chan!');
 	}
 
+	if(kawaiine.test(message)) {
+		message.reply('Thank you, One-chan!');
+	}
+
+	if(nya.test(message)) {
+		message.reply('Nya!');
+	}
+
 	if(watch.test(message)) {
 		let name = watch.exec(message)[1].toLowerCase();
-		save(name);
+		saveIllustrator(name);
 		message.reply(`Yes, I'm watching ${name}, Oni-chan!`);
 	}
 
 	if(unwatch.test(message)) {
 		let name = unwatch.exec(message)[1].toLowerCase();
-		remove(name);
+		removeIllustrator(name);
 		message.reply(`Yes, I'm unwatching ${name}, Oni-chan!`);
 	}
 

@@ -23,4 +23,6 @@ http://blhx.wikia.com/wiki/Unicorn
   2. `!unwatch @xxxxxx` - You might know.
   3. `!list` - She'll give you illustrator list she's watching. 
   4. `!kawaii` - Kawaii.
+  5. `!kawaiine` - Kawaiine.
+  6. `!nya` - Nya.
 
